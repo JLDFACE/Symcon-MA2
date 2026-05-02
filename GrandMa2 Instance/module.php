@@ -78,12 +78,15 @@ class GrandMa2Instance extends IPSModule
             return false;
         }
 
-        // Banner / Telnet-Optionen der MA abwarten und verwerfen (max. 200ms)
-        $read = [$fp]; $write = $except = null;
-        if (stream_select($read, $write, $except, 0, 200000)) {
-            $banner = fread($fp, 4096);
-            $this->SendDebug('GMA2 Telnet Banner', $banner, 0);
+        // Non-blocking: Banner vollständig lesen und verwerfen (kein Blockieren möglich)
+        stream_set_blocking($fp, false);
+        usleep(80000); // 80ms – reicht für Banner im LAN
+        $banner = '';
+        while (($chunk = fread($fp, 65536)) !== false && $chunk !== '') {
+            $banner .= $chunk;
         }
+        $this->SendDebug('GMA2 Telnet Banner', $banner, 0);
+        stream_set_blocking($fp, true);
 
         // Login + Kommandos + Logout als ein Block senden
         $block = '';
