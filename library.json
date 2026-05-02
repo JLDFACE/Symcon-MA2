@@ -1,0 +1,12 @@
+{
+  "id": "{1D4C360D-7308-541D-29FA-59C7D2484149}",
+  "author": "FACE GmbH",
+  "name": "GrandMa2 Control",
+  "url": "https://github.com/JLDFACE/Symcon-MA2",
+  "compatibility": {
+    "version": "7.0"
+  },
+  "version": "1.1",
+  "build": 1,
+  "date": 1746144000
+}

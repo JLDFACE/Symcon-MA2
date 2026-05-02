@@ -1,0 +1,36 @@
+{
+  "elements": [
+    {
+      "type": "ValidationTextBox",
+      "name": "ServerAddress",
+      "caption": "Server-Adresse / IP"
+    },
+    {
+      "type": "ValidationTextBox",
+      "name": "ServerPort",
+      "caption": "Port"
+    },
+    {
+      "type": "Button",
+      "caption": "Verbindung testen",
+      "onClick": "GMA2_TestConnection($id);"
+    }
+  ],
+  "status": [
+    {
+      "code": 102,
+      "icon": "active",
+      "caption": "Verbunden"
+    },
+    {
+      "code": 200,
+      "icon": "error",
+      "caption": "Server nicht erreichbar"
+    },
+    {
+      "code": 201,
+      "icon": "inactive",
+      "caption": "Keine Server-Adresse konfiguriert"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "elements": [
+    {
+      "type": "List",
+      "caption": "Commands",
+      "name": "Commands",
+      "add": true,
+      "delete": true,
+      "columns": [{
+        "caption": "Command",
+        "name": "Command",
+        "width": "auto",
+        "add": "",
+        "edit": {
+          "type": "ValidationTextBox"
+        }
+      }]
+    }
+  ]
+}

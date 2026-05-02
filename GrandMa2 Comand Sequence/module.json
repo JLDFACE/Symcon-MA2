@@ -1,0 +1,11 @@
+{
+  "id": "{2630ADC0-6BFB-BC62-5833-418B154BB497}",
+  "name": "GrandMa2 Command Sequence",
+  "aliases": [],
+  "type": 3,
+  "vendor": "FACE GmbH",
+  "parentRequirements": ["{94053D1B-05E5-BF8B-36BC-480E198272D0}"],
+  "childRequirements": [],
+  "implemented": ["{C7A96B72-8EFE-57BC-AC12-728469125518}"],
+  "prefix": "GMA2"
+}

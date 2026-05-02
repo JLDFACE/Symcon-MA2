@@ -1,0 +1,11 @@
+{
+  "id": "{BCB7DD65-6CBA-79F4-D330-A9A2CE06CDA7}",
+  "name": "GrandMa2 Instance",
+  "aliases": [],
+  "type": 2,
+  "vendor": "FACE GmbH",
+  "parentRequirements": [],
+  "childRequirements": ["{C7A96B72-8EFE-57BC-AC12-728469125518}"],
+  "implemented": ["{94053D1B-05E5-BF8B-36BC-480E198272D0}"],
+  "prefix": "GMA2"
+}
