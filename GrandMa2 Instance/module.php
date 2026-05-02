@@ -93,13 +93,19 @@ class GrandMa2Instance extends IPSModule
             $this->SendDebug('GMA2 Telnet Login Response', $loginResponse, 0);
         }
 
-        // Kommandos senden
+        // Alle Kommandos ohne Wartezeit senden
         foreach ($commands as $cmd) {
             $this->SendDebug('GMA2 Telnet CMD', $cmd, 0);
             fwrite($fp, $cmd . "\r\n");
-            $response = $this->TelnetRead($fp);
-            $this->SendDebug('GMA2 Telnet Response', $response, 0);
         }
+
+        // Einmal alle Antworten lesen
+        $response = $this->TelnetRead($fp);
+        $this->SendDebug('GMA2 Telnet Response', $response, 0);
+
+        // Sauberer Logout vor dem Trennen
+        fwrite($fp, 'logout' . "\r\n");
+        usleep(50000);
 
         fclose($fp);
 
@@ -134,10 +140,10 @@ class GrandMa2Instance extends IPSModule
     public function RequestAction($Ident, $Value) {
     }
 
-    // Telnet-Antwort lesen bis Timeout oder keine Daten mehr
+    // Telnet-Antwort lesen bis keine Daten mehr kommen (max. 300ms)
     private function TelnetRead($fp) {
         $response = '';
-        $deadline = microtime(true) + 0.5;
+        $deadline = microtime(true) + 0.3;
         while (!feof($fp) && microtime(true) < $deadline) {
             $chunk = fread($fp, 4096);
             if ($chunk === false || $chunk === '') {
