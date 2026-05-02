@@ -78,7 +78,14 @@ class GrandMa2Instance extends IPSModule
             return false;
         }
 
-        // Alles in einem Block senden – keine Wartezeiten auf Antworten
+        // Banner / Telnet-Optionen der MA abwarten und verwerfen (max. 200ms)
+        $read = [$fp]; $write = $except = null;
+        if (stream_select($read, $write, $except, 0, 200000)) {
+            $banner = fread($fp, 4096);
+            $this->SendDebug('GMA2 Telnet Banner', $banner, 0);
+        }
+
+        // Login + Kommandos + Logout als ein Block senden
         $block = '';
 
         if (!empty(trim($username))) {
