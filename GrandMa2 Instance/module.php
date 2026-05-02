@@ -78,34 +78,22 @@ class GrandMa2Instance extends IPSModule
             return false;
         }
 
-        stream_set_timeout($fp, 3);
+        // Alles in einem Block senden – keine Wartezeiten auf Antworten
+        $block = '';
 
-        // Banner der MA lesen
-        $banner = $this->TelnetRead($fp);
-        $this->SendDebug('GMA2 Telnet Banner', $banner, 0);
-
-        // Login senden wenn Zugangsdaten konfiguriert
         if (!empty(trim($username))) {
-            $loginCmd = 'Login "' . $username . '" "' . $password . '"';
-            $this->SendDebug('GMA2 Telnet Login', $loginCmd, 0);
-            fwrite($fp, $loginCmd . "\r\n");
-            $loginResponse = $this->TelnetRead($fp);
-            $this->SendDebug('GMA2 Telnet Login Response', $loginResponse, 0);
+            $block .= 'Login "' . $username . '" "' . $password . '"' . "\r\n";
         }
 
-        // Alle Kommandos ohne Wartezeit senden
         foreach ($commands as $cmd) {
             $this->SendDebug('GMA2 Telnet CMD', $cmd, 0);
-            fwrite($fp, $cmd . "\r\n");
+            $block .= $cmd . "\r\n";
         }
 
-        // Einmal alle Antworten lesen
-        $response = $this->TelnetRead($fp);
-        $this->SendDebug('GMA2 Telnet Response', $response, 0);
+        $block .= 'logout' . "\r\n";
 
-        // Sauberer Logout vor dem Trennen
-        fwrite($fp, 'logout' . "\r\n");
-        usleep(50000);
+        $this->SendDebug('GMA2 Telnet Block', $block, 0);
+        fwrite($fp, $block);
 
         fclose($fp);
 
@@ -138,21 +126,6 @@ class GrandMa2Instance extends IPSModule
     }
 
     public function RequestAction($Ident, $Value) {
-    }
-
-    // Telnet-Antwort lesen bis keine Daten mehr kommen (max. 300ms)
-    private function TelnetRead($fp) {
-        $response = '';
-        $deadline = microtime(true) + 0.3;
-        while (!feof($fp) && microtime(true) < $deadline) {
-            $chunk = fread($fp, 4096);
-            if ($chunk === false || $chunk === '') {
-                break;
-            }
-            // Telnet-Steuerzeichen (IAC-Sequenzen) entfernen
-            $response .= preg_replace('/\xff[\xfb-\xfe]./s', '', $chunk);
-        }
-        return $response;
     }
 
     private function SetValueIfChanged($ident, $value) {
