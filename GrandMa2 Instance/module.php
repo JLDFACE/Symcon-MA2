@@ -103,7 +103,29 @@ class GrandMa2Instance extends IPSModule
         $block .= 'logout' . "\r\n";
 
         $this->SendDebug('GMA2 Telnet Block', $block, 0);
+        stream_set_blocking($fp, true);
         fwrite($fp, $block);
+
+        // Warten bis die MA alle Kommandos verarbeitet hat (logout-Prompt abwarten)
+        // Die MA sendet nach jedem Kommando "[Channel]>" – wir zählen die Prompts
+        $expectedPrompts = count($commands) + 2; // Login + Kommandos + Logout
+        stream_set_blocking($fp, false);
+        $response      = '';
+        $promptCount   = 0;
+        $deadline      = microtime(true) + 3.0;
+        while (microtime(true) < $deadline) {
+            $chunk = fread($fp, 65536);
+            if ($chunk !== false && $chunk !== '') {
+                $response .= $chunk;
+                $promptCount = substr_count($response, '[Channel]>');
+                if ($promptCount >= $expectedPrompts) {
+                    break;
+                }
+            } else {
+                usleep(10000); // 10ms schlafen wenn keine Daten
+            }
+        }
+        $this->SendDebug('GMA2 Telnet Response', $response, 0);
 
         fclose($fp);
 
