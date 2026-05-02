@@ -6,9 +6,21 @@
       "caption": "Server-Adresse / IP"
     },
     {
-      "type": "ValidationTextBox",
+      "type": "NumberSpinner",
       "name": "ServerPort",
-      "caption": "Port"
+      "caption": "Telnet-Port",
+      "minimum": 1,
+      "maximum": 65535
+    },
+    {
+      "type": "ValidationTextBox",
+      "name": "Username",
+      "caption": "Benutzername"
+    },
+    {
+      "type": "PasswordTextBox",
+      "name": "Password",
+      "caption": "Passwort"
     },
     {
       "type": "Button",
